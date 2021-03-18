@@ -20,7 +20,7 @@
 @end
 
 static int fontSize = 16;
-static double offsetY = -0.5;
+static double offsetY = 0;
 
 %hook _UIStatusBarBatteryItem
 
@@ -33,7 +33,7 @@ static double offsetY = -0.5;
       [orig addSubview: orig.percentLabel];
       orig.percentLabel.translatesAutoresizingMaskIntoConstraints = NO;
 			[orig.percentLabel.leadingAnchor constraintEqualToAnchor:orig.leadingAnchor].active = YES;
-      [orig.percentLabel.centerYAnchor constraintEqualToAnchor:orig.centerYAnchor constant:offsetY].active = YES;
+      [orig.percentLabel.topAnchor constraintEqualToAnchor:orig.topAnchor constant:(-fontSize/4 + offsetY)].active = YES;
       NSString *percentChar = @"";
       if (orig.chargePercent < 1)
         percentChar = @"%";
