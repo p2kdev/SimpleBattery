@@ -1,0 +1,10 @@
+Package: com.p2kdev.simplebattery
+Name: SimpleBattery
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Simple Battery for Notched Devices!
+Maintainer: P2KDev <p2kdev@gmail.com>
+Author: P2KDev <p2kdev@gmail.com>
+Icon: file:///Library/Application Support/SimpleBattery/icon.png
+Section: Tweaks
