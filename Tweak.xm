@@ -7,8 +7,10 @@
 	@property (assign,nonatomic) BOOL isForStatusBar;
   @property (assign,nonatomic) BOOL isFetchingBatteryFillColor;
   @property(nonatomic, retain) UIColor *backupTextColor;
+	@property (nonatomic,copy) UIColor * fillColor;
 	@property (nonatomic,copy) UIColor * bodyColor;
 	@property (nonatomic,copy) UIColor * pinColor;
+	-(UIColor*)_batteryTextColor;
 	-(void)setShowsPercentage:(BOOL)arg1;
 	-(void)setFillLayer:(CALayer *)arg1;
 	-(void)updatePercentageColor;
@@ -23,12 +25,26 @@
 		return orig;
 	}
 
+	-(_UIBatteryView *)staticBatteryView
+	{
+		_UIBatteryView *orig = %orig;
+		orig.isForStatusBar = YES;
+		return orig;
+	}
+
+	-(id)applyUpdate:(id)arg1 toDisplayItem:(id)arg2
+	{
+		id orig = %orig;
+		[MSHookIvar<UILabel*>(self,"_percentView") setText:nil];
+		return orig;
+	}
+
 %end
 
 %hook _UIBatteryView
 
   %property (assign,nonatomic) BOOL isForStatusBar;
-  %property (assign,nonatomic) BOOL isFetchingBatteryFillColor;
+  //%property (assign,nonatomic) BOOL isFetchingBatteryFillColor;
 	%property(nonatomic, retain) UIColor *backupTextColor;
 
 	-(void)_updateFillColor
@@ -52,42 +68,44 @@
 		}
 	}
 
+	-(id)_batteryTextColor
+	{
+		UIColor *orig = %orig;
+		if (self.isForStatusBar)
+			self.backupTextColor = orig;
+		return %orig;
+	}
+
 	-(id)_batteryFillColor
 	{
-		self.isFetchingBatteryFillColor = YES;
-		self.backupTextColor = %orig;
-		self.isFetchingBatteryFillColor = NO;
+		//self.isFetchingBatteryFillColor = YES;
+		//self.backupTextColor = %orig;
+		//self.isFetchingBatteryFillColor = NO;
 
 		if (self.isForStatusBar)
 			return [UIColor clearColor];
 		else
-			return self.backupTextColor;
+			return %orig;
 	}
 
 	-(BOOL)_shouldShowBolt
 	{
-		return self.isForStatusBar ? NO : (self.chargingState != 0 ? YES : %orig);
+		return self.isForStatusBar ? NO : %orig;
 	}
 
   -(BOOL)showsInlineChargingIndicator
   {
-    return self.isForStatusBar ? NO : (self.chargingState != 0 ? YES : %orig);
+    return self.isForStatusBar ? NO : %orig;
   }
 
 	-(BOOL)_currentlyShowsPercentage
 	{
-		return self.isForStatusBar && !self.isFetchingBatteryFillColor;
+		return self.isForStatusBar;
 	}
 
 	-(BOOL)showsPercentage
 	{
-		return self.isForStatusBar && !self.isFetchingBatteryFillColor;
-	}
-
-	-(void)setShowsPercentage:(BOOL)arg1
-	{
-		arg1 = self.isForStatusBar;
-		%orig;
+		return self.isForStatusBar;
 	}
 
 %end
