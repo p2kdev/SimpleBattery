@@ -99,8 +99,10 @@
 			return [UIColor blackColor];
 		else
 		{
+			UIColor *orig = %orig;
 			CGFloat r,g,b,a;
-			[self.backupTextColor getRed:&r green:&g blue:&b alpha:&a];
+			//[self.backupTextColor getRed:&r green:&g blue:&b alpha:&a];
+			[orig getRed:&r green:&g blue:&b alpha:&a];
 			return [UIColor colorWithRed:1.-r green:1.-g blue:1.-b alpha:a];
 		}
 	}

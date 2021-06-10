@@ -2,6 +2,7 @@ PACKAGE_VERSION=$(THEOS_PACKAGE_BASE_VERSION)
 
 include $(THEOS)/makefiles/common.mk
 
+export THEOS_DEVICE_IP=192.168.86.35
 export TARGET = iphone:clang:13.0:13.0
 export ARCHS = arm64 arm64e
 
