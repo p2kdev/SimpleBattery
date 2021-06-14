@@ -39,16 +39,16 @@
 	-(_UIStaticBatteryView  *)staticBatteryView
 	{
 		_UIStaticBatteryView *orig = %orig;
-		orig.isForStatusBar = YES;
+		orig.isForStatusBar = NO;
 		return orig;
 	}
 
-	-(id)applyUpdate:(id)arg1 toDisplayItem:(id)arg2
-	{
-		id orig = %orig;
-		[MSHookIvar<UILabel*>(self,"_percentView") setText:nil];
-		return orig;
-	}
+	// -(id)applyUpdate:(id)arg1 toDisplayItem:(id)arg2
+	// {
+	// 	id orig = %orig;
+	// 	[MSHookIvar<UILabel*>(self,"_percentView") setText:nil];
+	// 	return orig;
+	// }
 
 %end
 
@@ -57,6 +57,18 @@
   %property (assign,nonatomic) BOOL isForStatusBar;
   %property (assign,nonatomic) BOOL isFetchingBatteryFillColor;
 	%property(nonatomic, retain) UIColor *backupTextColor;
+
+	-(id)initWithFrame:(CGRect)arg1
+	{
+		self = %orig;
+    if (self)
+    {
+			self.isForStatusBar = NO;
+			self.isFetchingBatteryFillColor = NO;
+			self.backupTextColor = nil;
+    }
+    return self;
+	}
 
 	-(void)__updateFillLayer
 	{
@@ -95,15 +107,19 @@
 
 	-(id)_batteryTextColor
 	{
-		if ([self saverModeActive] || [self chargingState] != 0)
+		if ([self saverModeActive])
+      return [UIColor blackColor];
+	  else if ([self chargePercent] <= 0.20)
+      return [UIColor whiteColor];
+		else if ([self chargingState] != 0)
 			return [UIColor blackColor];
 		else
 		{
 			UIColor *orig = %orig;
-			CGFloat r,g,b,a;
-			//[self.backupTextColor getRed:&r green:&g blue:&b alpha:&a];
+			CGFloat r,g,b,a,r1,g1,b1,a1;
+			[self.backupTextColor getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
 			[orig getRed:&r green:&g blue:&b alpha:&a];
-			return [UIColor colorWithRed:1.-r green:1.-g blue:1.-b alpha:a];
+			return [UIColor colorWithRed:1.-r1 green:1.-g1 blue:1.-b1 alpha:a];
 		}
 	}
 
