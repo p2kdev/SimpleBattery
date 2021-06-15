@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+	<key>items</key>
+
+		<array>
+
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Battery Style</string>
+			</dict>
+
+			<dict>
+				<key>cell</key>
+				<string>PSSegmentCell</string>
+				<key>defaults</key>
+				<string>com.p2kdev.simplebattery</string>
+				<key>key</key>
+				<string>style</string>
+				<key>default</key>
+				<integer>1</integer>
+				<key>validTitles</key>
+				<array>
+					<string>Stock</string>
+					<string>Pill Style</string>
+					<string>Empty Fill</string>					
+					<string>Percentage</string>
+				</array>
+				<key>validValues</key>
+				<array>
+					<integer>1</integer>
+					<integer>2</integer>
+					<integer>3</integer>
+					<integer>4</integer>
+				</array>
+				<key>PostNotification</key>
+				<string>com.p2kdev.simplebattery.settingschanged</string>
+			</dict>
+
+
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Percent Style Options</string>
+			</dict>
+
+			<dict>
+				<key>cell</key>
+				<string>PSEditTextCell</string>
+				<key>defaults</key>
+				<string>com.p2kdev.simplebattery</string>
+				<key>detail</key>
+				<string>PSDetailController</string>
+				<key>key</key>
+				<string>labelFontSize</string>
+				<key>label</key>
+				<string>Label Font Size</string>
+				<key>default</key>
+				<string>15</string>
+				<key>PostNotification</key>
+				<string>com.p2kdev.simplebattery.settingschanged</string>
+			</dict>
+
+			<dict>
+				<key>cell</key>
+				<string>PSEditTextCell</string>
+				<key>defaults</key>
+				<string>com.p2kdev.simplebattery</string>
+				<key>detail</key>
+				<string>PSDetailController</string>
+				<key>key</key>
+				<string>labelY</string>
+				<key>label</key>
+				<string>Label Y Offset</string>
+				<key>default</key>
+				<string>0</string>
+				<key>PostNotification</key>
+				<string>com.p2kdev.simplebattery.settingschanged</string>
+			</dict>
+
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+			</dict>
+
+			<dict>
+				<key>cell</key>
+				<string>PSButtonCell</string>
+				<key>label</key>
+				<string>Respring!</string>
+				<key>action</key>
+				<string>respring</string>
+			</dict>
+
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Support</string>
+				<key>footerText</key>
+				<string>Wish to donate? Donation link found on my twitter bio. Please click the above link to visit my twitter profile!</string>
+			</dict>
+
+
+			<dict>
+				<key>action</key>
+				<string>visitTwitter</string>
+				<key>cell</key>
+				<string>PSButtonCell</string>
+				<key>label</key>
+				<string>Follow me on Twitter @p2kdev</string>
+				<key>icon</key>
+				<string>twitter.png</string>
+			</dict>
+
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>footerAlignment</key>
+				<integer>1</integer>
+				<key>footerText</key>
+				<string>© 2021 P2kDev (@p2kdev)</string>
+			</dict>
+
+	</array>
+
+	<key>title</key>
+	<string>SimpleBattery</string>
+</dict>
+</plist>
