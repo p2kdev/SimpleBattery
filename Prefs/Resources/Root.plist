@@ -27,7 +27,7 @@
 				<array>
 					<string>Stock</string>
 					<string>Pill Style</string>
-					<string>Empty Fill</string>					
+					<string>Empty Fill</string>
 					<string>Percentage</string>
 				</array>
 				<key>validValues</key>
@@ -78,7 +78,7 @@
 				<key>label</key>
 				<string>Label Y Offset</string>
 				<key>default</key>
-				<string>0</string>
+				<string>3</string>
 				<key>PostNotification</key>
 				<string>com.p2kdev.simplebattery.settingschanged</string>
 			</dict>

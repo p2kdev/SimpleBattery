@@ -42,7 +42,7 @@
 //4 -> Actual Percentage
 static int style = 1;
 static int labelFontSize = 15;
-static int labelY = 0;
+static int labelY = 3;
 
 %hook _UIStatusBarBatteryItem
 
@@ -56,7 +56,7 @@ static int labelY = 0;
 			[orig addSubview: orig.sbPercentageLabel];
 			orig.sbPercentageLabel.translatesAutoresizingMaskIntoConstraints = NO;
 			[orig.sbPercentageLabel.leadingAnchor constraintEqualToAnchor:orig.leadingAnchor].active = YES;
-			[orig.sbPercentageLabel.topAnchor constraintEqualToAnchor:orig.topAnchor constant:(-labelFontSize/4 + labelY)].active = YES;
+			[orig.sbPercentageLabel.bottomAnchor constraintEqualToAnchor:orig.bottomAnchor constant:labelY].active = YES;
 			NSString *percentChar = @"";
 			if (orig.chargePercent < 1)
 				percentChar = @"%";
