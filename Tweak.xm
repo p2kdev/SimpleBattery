@@ -42,7 +42,7 @@
 //4 -> Actual Percentage
 static int style = 1;
 static int labelFontSize = 15;
-static int labelY = 3;
+static double labelY = 0.5;
 
 %hook _UIStatusBarBatteryItem
 
@@ -56,14 +56,14 @@ static int labelY = 3;
 			[orig addSubview: orig.sbPercentageLabel];
 			orig.sbPercentageLabel.translatesAutoresizingMaskIntoConstraints = NO;
 			[orig.sbPercentageLabel.leadingAnchor constraintEqualToAnchor:orig.leadingAnchor].active = YES;
-			[orig.sbPercentageLabel.bottomAnchor constraintEqualToAnchor:orig.bottomAnchor constant:labelY].active = YES;
+			[orig.sbPercentageLabel.centerYAnchor constraintEqualToAnchor:orig.centerYAnchor constant:labelY].active = YES;
 			NSString *percentChar = @"";
 			if (orig.chargePercent < 1)
 				percentChar = @"%";
 
 			[orig.sbPercentageLabel setText: [NSString stringWithFormat:@"%.0f%@", floor(orig.chargePercent * 100),percentChar]];
 			[orig.sbPercentageLabel setFont:[UIFont boldSystemFontOfSize:labelFontSize]];
-			[orig.sbPercentageLabel sizeToFit];
+			//[orig.sbPercentageLabel sizeToFit];
 			orig.sbPercentageLabel.textAlignment = NSTextAlignmentLeft;
 		}
 		return orig;
@@ -112,6 +112,20 @@ static int labelY = 3;
     }
     return self;
 	}
+
+	// -(void)layoutSubviews
+	// {
+	// 	%orig;
+	// 	if (self.sbPercentageLabel && ([self.superview class] == objc_getClass("_UIStatusBarForegroundView")))
+	// 	{
+	// 		if (self.sbPercentageLabel.translatesAutoresizingMaskIntoConstraints)
+	// 		{
+	// 			self.sbPercentageLabel.translatesAutoresizingMaskIntoConstraints = NO;
+	// 			[self.sbPercentageLabel.leadingAnchor constraintEqualToAnchor:self.leadingAnchor].active = YES;
+	// 			[self.sbPercentageLabel.centerYAnchor constraintEqualToAnchor:self.superview.centerYAnchor].active = YES;
+	// 		}
+	// 	}
+	// }
 
 	- (void)setChargePercent: (CGFloat)percent
 	{
@@ -251,7 +265,7 @@ static void reloadSettings() {
     //isEnabled = [prefs objectForKey:@"isEnabled"] ? [[prefs objectForKey:@"isEnabled"] boolValue] : isEnabled;
     style = [prefs objectForKey:@"style"] ? [[prefs objectForKey:@"style"] intValue] : style;
 		labelFontSize = [prefs objectForKey:@"labelFontSize"] ? [[prefs objectForKey:@"labelFontSize"] intValue] : labelFontSize;
-    labelY = [prefs objectForKey:@"labelY"] ? [[prefs objectForKey:@"labelY"] intValue] : labelY;
+    labelY = [prefs objectForKey:@"labelY"] ? [[prefs objectForKey:@"labelY"] doubleValue] : labelY;
 	}
 }
 

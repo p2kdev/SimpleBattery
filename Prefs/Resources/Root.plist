@@ -78,7 +78,7 @@
 				<key>label</key>
 				<string>Label Y Offset</string>
 				<key>default</key>
-				<string>3</string>
+				<string>0.5</string>
 				<key>PostNotification</key>
 				<string>com.p2kdev.simplebattery.settingschanged</string>
 			</dict>

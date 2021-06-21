@@ -4,6 +4,8 @@ include $(THEOS)/makefiles/common.mk
 
 export ARCHS = arm64 arm64e
 export TARGET = iphone:clang:13.0:13.0
+export THEOS_DEVICE_IP=192.168.86.29
+export THEOS_DEVICE_PORT=2222
 
 BUNDLE_NAME = SimpleBattery
 SimpleBattery_FILES = SBPrefRootListController.m
