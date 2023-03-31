@@ -1,11 +1,9 @@
-export PREFIX = $(THEOS)/toolchain/Xcode11.xctoolchain/usr/bin/
+export THEOS_PACKAGE_SCHEME=rootless
+export TARGET = iphone:clang:13.7:13.0
 
 include $(THEOS)/makefiles/common.mk
 
 export ARCHS = arm64 arm64e
-export TARGET = iphone:clang:13.0:13.0
-export THEOS_DEVICE_IP=192.168.86.29
-export THEOS_DEVICE_PORT=2222
 
 BUNDLE_NAME = SimpleBattery
 SimpleBattery_FILES = SBPrefRootListController.m

@@ -258,15 +258,20 @@ static void respring(CFNotificationCenterRef center, void *observer, CFStringRef
 }
 
 static void reloadSettings() {
+		static CFStringRef prefsKey = CFSTR("com.p2kdev.simplebattery");
+		CFPreferencesAppSynchronize(prefsKey);
 
-	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.p2kdev.simplebattery.plist"];
-	if(prefs)
-	{
-    //isEnabled = [prefs objectForKey:@"isEnabled"] ? [[prefs objectForKey:@"isEnabled"] boolValue] : isEnabled;
-    style = [prefs objectForKey:@"style"] ? [[prefs objectForKey:@"style"] intValue] : style;
-		labelFontSize = [prefs objectForKey:@"labelFontSize"] ? [[prefs objectForKey:@"labelFontSize"] intValue] : labelFontSize;
-    labelY = [prefs objectForKey:@"labelY"] ? [[prefs objectForKey:@"labelY"] doubleValue] : labelY;
-	}
+		if (CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"style", prefsKey))) {
+			style = [(id)CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"style", prefsKey)) intValue];
+		}
+
+		if (CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"labelFontSize", prefsKey))) {
+			labelFontSize = [(id)CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"labelFontSize", prefsKey)) intValue];
+		}
+
+		if (CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"labelY", prefsKey))) {
+			labelY = [(id)CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"labelY", prefsKey)) doubleValue];
+		}
 }
 
 %ctor {
