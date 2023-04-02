@@ -153,6 +153,9 @@ static double labelY = 0;
 			origFrame.size.height = self.bodyLayer.frame.size.height - 2;
 			self.fillLayer.frame = origFrame;
 		}
+
+		if (style == 1 && self.percentageLabel)
+			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightHeavy];		
 	}
 
 	-(void)_updateFillColor
@@ -182,6 +185,9 @@ static double labelY = 0;
 			[self setBodyColor:newBodyColor];
 			[self setPinColor:newBodyColor];
 		}
+
+		if (style == 1 && self.percentageLabel)
+			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightHeavy];		
 	}
 
 	-(id)_batteryTextColor
@@ -250,8 +256,8 @@ static double labelY = 0;
 	-(void)_updatePercentage
 	{
 		%orig;
-		if (style == 1 && self.isForStatusBar)
-			self.percentageLabel.font = [UIFont boldSystemFontOfSize:stockLabelFontSize];
+		if (style == 1 && self.percentageLabel)
+			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightHeavy];
 	}
 
 %end
