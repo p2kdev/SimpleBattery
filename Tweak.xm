@@ -41,8 +41,9 @@
 //3 -> Empty with Percentage
 //4 -> Actual Percentage
 static int style = 1;
-static int labelFontSize = 15;
-static double labelY = 0.5;
+static double labelFontSize = 15;
+static double stockLabelFontSize = 10;
+static double labelY = 0;
 
 %hook _UIStatusBarBatteryItem
 
@@ -77,13 +78,13 @@ static double labelY = 0.5;
 	}
 
 	//Hide the charging view
-  -(_UIStatusBarImageView *)chargingView
-  {
-    _UIStatusBarImageView *orig = %orig;
-		if (style == 4)
-    	orig.hidden = YES;
-    return orig;
-  }
+	-(_UIStatusBarImageView *)chargingView
+	{
+		_UIStatusBarImageView *orig = %orig;
+			if (style == 4)
+			orig.hidden = YES;
+		return orig;
+	}
 
 	// -(id)applyUpdate:(id)arg1 toDisplayItem:(id)arg2
 	// {
@@ -97,20 +98,20 @@ static double labelY = 0.5;
 %hook _UIBatteryView
 
 	%property (nonatomic, retain) UILabel *sbPercentageLabel;
-  %property (assign,nonatomic) BOOL isForStatusBar;
-  %property (assign,nonatomic) BOOL isFetchingBatteryFillColor;
+	%property (assign,nonatomic) BOOL isForStatusBar;
+	%property (assign,nonatomic) BOOL isFetchingBatteryFillColor;
 	%property(nonatomic, retain) UIColor *backupTextColor;
 
 	-(id)initWithFrame:(CGRect)arg1
 	{
 		self = %orig;
-    if (self)
-    {
-			self.isForStatusBar = NO;
-			self.isFetchingBatteryFillColor = NO;
-			self.backupTextColor = nil;
-    }
-    return self;
+		if (self)
+		{
+				self.isForStatusBar = NO;
+				self.isFetchingBatteryFillColor = NO;
+				self.backupTextColor = nil;
+		}
+		return self;
 	}
 
 	// -(void)layoutSubviews
@@ -130,14 +131,14 @@ static double labelY = 0.5;
 	- (void)setChargePercent: (CGFloat)percent
 	{
 		%orig;
-    if (self.sbPercentageLabel && style == 4)
-    {
-      NSString *percentChar = @"";
-      if (percent < 1)
-        percentChar = @"%";
+		if (self.sbPercentageLabel && style == 4)
+		{
+		NSString *percentChar = @"";
+		if (percent < 1)
+			percentChar = @"%";
 
-		  [[self sbPercentageLabel] setText: [NSString stringWithFormat:@"%.0f%@", floor(percent * 100),percentChar]];
-    }
+			[[self sbPercentageLabel] setText: [NSString stringWithFormat:@"%.0f%@", floor(percent * 100),percentChar]];
+		}
 	}
 
 	-(void)__updateFillLayer
@@ -223,10 +224,10 @@ static double labelY = 0.5;
 		return self.isForStatusBar ? NO : %orig;
 	}
 
-  -(BOOL)showsInlineChargingIndicator
-  {
-    return self.isForStatusBar ? NO : %orig;
-  }
+	-(BOOL)showsInlineChargingIndicator
+	{
+		return self.isForStatusBar ? NO : %orig;
+	}
 
 	-(BOOL)_currentlyShowsPercentage
 	{
@@ -246,10 +247,12 @@ static double labelY = 0.5;
 		return %orig;
 	}
 
-	// -(void)setShowsPercentage:(BOOL)arg1
-	// {
-	// 	%orig(self.isForStatusBar && style < 4);
-	// }
+	-(void)_updatePercentage
+	{
+		%orig;
+		if (style == 1 && self.isForStatusBar)
+			self.percentageLabel.font = [UIFont boldSystemFontOfSize:stockLabelFontSize];
+	}
 
 %end
 
@@ -266,8 +269,12 @@ static void reloadSettings() {
 		}
 
 		if (CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"labelFontSize", prefsKey))) {
-			labelFontSize = [(id)CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"labelFontSize", prefsKey)) intValue];
+			labelFontSize = [(id)CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"labelFontSize", prefsKey)) doubleValue];
 		}
+
+		if (CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"stockLabelFontSize", prefsKey))) {
+			stockLabelFontSize = [(id)CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"stockLabelFontSize", prefsKey)) doubleValue];
+		}		
 
 		if (CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"labelY", prefsKey))) {
 			labelY = [(id)CFBridgingRelease(CFPreferencesCopyAppValue((CFStringRef)@"labelY", prefsKey)) doubleValue];

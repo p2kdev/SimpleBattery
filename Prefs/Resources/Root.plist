@@ -41,6 +41,33 @@
 				<string>com.p2kdev.simplebattery.settingschanged</string>
 			</dict>
 
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Stock Battery Font Size</string>
+			</dict>
+
+			<dict>
+				<key>cell</key>
+				<string>PSSliderCell</string>
+				<key>default</key>
+				<integer>10</integer>
+				<key>defaults</key>
+				<string>com.p2kdev.simplebattery</string>
+				<key>key</key>
+				<string>stockLabelFontSize</string>
+				<key>max</key>
+				<real>14</real>
+				<key>min</key>
+				<real>8</real>
+				<key>showValue</key>
+				<true/>
+				<key>segmentCount</key>
+				<integer>12</integer>				
+				<key>isSegmented</key>
+				<true/>				
+			</dict>		
 
 			<dict>
 				<key>cell</key>
@@ -78,7 +105,7 @@
 				<key>label</key>
 				<string>Label Y Offset</string>
 				<key>default</key>
-				<string>0.5</string>
+				<string>0</string>
 				<key>PostNotification</key>
 				<string>com.p2kdev.simplebattery.settingschanged</string>
 			</dict>
