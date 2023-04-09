@@ -155,7 +155,7 @@ static double labelY = 0;
 		}
 
 		if (style == 1 && self.percentageLabel)
-			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightHeavy];		
+			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightBold];		
 	}
 
 	-(void)_updateFillColor
@@ -187,7 +187,7 @@ static double labelY = 0;
 		}
 
 		if (style == 1 && self.percentageLabel)
-			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightHeavy];		
+			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightBold];		
 	}
 
 	-(id)_batteryTextColor
@@ -257,7 +257,7 @@ static double labelY = 0;
 	{
 		%orig;
 		if (style == 1 && self.percentageLabel)
-			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightHeavy];
+			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightBold];
 	}
 
 %end

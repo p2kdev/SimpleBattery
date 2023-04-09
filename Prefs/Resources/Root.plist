@@ -58,13 +58,13 @@
 				<key>key</key>
 				<string>stockLabelFontSize</string>
 				<key>max</key>
-				<real>14</real>
+				<real>12</real>
 				<key>min</key>
-				<real>8</real>
+				<real>9</real>
 				<key>showValue</key>
 				<true/>
 				<key>segmentCount</key>
-				<integer>12</integer>				
+				<integer>6</integer>				
 				<key>isSegmented</key>
 				<true/>				
 			</dict>		
