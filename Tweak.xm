@@ -133,9 +133,9 @@ static double labelY = 0;
 		%orig;
 		if (self.sbPercentageLabel && style == 4)
 		{
-		NSString *percentChar = @"";
-		if (percent < 1)
-			percentChar = @"%";
+			NSString *percentChar = @"";
+			if (percent < 1)
+				percentChar = @"%";
 
 			[[self sbPercentageLabel] setText: [NSString stringWithFormat:@"%.0f%@", floor(percent * 100),percentChar]];
 		}
@@ -154,7 +154,7 @@ static double labelY = 0;
 			self.fillLayer.frame = origFrame;
 		}
 
-		if (style == 1 && self.percentageLabel)
+		if (style < 4 && self.percentageLabel)
 			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightBold];		
 	}
 
@@ -186,7 +186,7 @@ static double labelY = 0;
 			[self setPinColor:newBodyColor];
 		}
 
-		if (style == 1 && self.percentageLabel)
+		if (style < 4 && self.percentageLabel)
 			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightBold];		
 	}
 
@@ -256,7 +256,7 @@ static double labelY = 0;
 	-(void)_updatePercentage
 	{
 		%orig;
-		if (style == 1 && self.percentageLabel)
+		if (style < 4 && self.percentageLabel)
 			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightBold];
 	}
 
