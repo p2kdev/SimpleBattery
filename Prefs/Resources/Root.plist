@@ -25,7 +25,8 @@
 				<integer>1</integer>
 				<key>validTitles</key>
 				<array>
-					<string>Stock</string>
+					<string>iOS15</string>
+					<string>iOS16</string>
 					<string>Pill Style</string>
 					<string>Empty Fill</string>
 					<string>Percentage</string>
@@ -33,6 +34,7 @@
 				<key>validValues</key>
 				<array>
 					<integer>1</integer>
+					<integer>5</integer>
 					<integer>2</integer>
 					<integer>3</integer>
 					<integer>4</integer>
