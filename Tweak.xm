@@ -97,7 +97,7 @@ extern NSString *const kCAFilterDestOut;
 		-(_UIStatusBarImageView *)chargingView
 		{
 			_UIStatusBarImageView *orig = %orig;
-				if (style == 4)
+				if (style >= 4)
 				orig.hidden = YES;
 			return orig;
 		}
@@ -113,7 +113,7 @@ extern NSString *const kCAFilterDestOut;
 		%property (nonatomic, retain) UILabel *sbPercentageLabel;
 		%property (assign,nonatomic) BOOL isForStatusBar;
 		%property (assign,nonatomic) BOOL isFetchingBatteryFillColor;
-		%property(nonatomic, retain) UIColor *backupTextColor;
+		%property (nonatomic, retain) UIColor *backupTextColor;
 
 		-(id)initWithFrame:(CGRect)arg1
 		{
@@ -278,26 +278,40 @@ extern NSString *const kCAFilterDestOut;
 		}
 
 		- (id)_batteryTextColor {
-			if (self.saverModeActive && self.isForStatusBar) {
-				return [UIColor blackColor];
+			if (self.isForStatusBar) {
+				if (self.saverModeActive)
+					return [UIColor blackColor];
+				else if (self.chargingState == 1)
+					return [UIColor whiteColor];
+				else
+					return %orig;
 			}
 			return %orig;
-		}
+		}	
 
 		- (UIColor *)_batteryFillColor { // Return default or custom fill colors based on charging state
 
 			if (!self.isForStatusBar)
 				return %orig;
-			
+
+			UIColor *fillColor;
+
 			if (!self.saverModeActive) { // Normal use
 				if (self.chargingState == 1) { // Charging
-					return [UIColor systemGreenColor]; 
+					fillColor =  [UIColor systemGreenColor]; 
 				} else if (self.lowBattery) {
-					return [UIColor systemRedColor];
-				} else return [UIColor labelColor]; // Color of normal use (not charging & not in Low Power mode)
+					fillColor =  [UIColor systemRedColor];
+				} else fillColor = [UIColor labelColor]; // Color of normal use (not charging & not in Low Power mode)
 			} else { // Low Power, overrides custom charging color
-				return [UIColor systemYellowColor];
+				fillColor = [UIColor systemYellowColor];
 			}
+
+			if (self.chargePercent > 0.97)
+				[self setPinColor:fillColor];
+			else
+				[self setPinColor:[[UIColor labelColor] colorWithAlphaComponent:0.4]];
+
+			return fillColor;
 		}
 
 		- (void)setSaverModeActive:(BOOL)arg1 {
@@ -307,18 +321,11 @@ extern NSString *const kCAFilterDestOut;
 				[self _updatePercentage];
 		}
 
-		- (UIColor *)pinColor {
-			if (!self.isForStatusBar)
-				return %orig;
-			
-			return (self.chargePercent > 0.97) ? [self _batteryFillColor] : %orig; // Set pin color to fill color, but only when charge exceeds frame of regular battery body
-		}
-
 		- (void)_updateFillLayer {
 			%orig;
 
 			if (self.isForStatusBar)
-				[self.fillLayer setCornerRadius:([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? 4.0 : 3.5]; // Set fill corner radius whenever layer updates
+				[self.fillLayer setCornerRadius:4.0]; // Set fill corner radius whenever layer updates
 		}
 
 		- (void)_updatePercentage {
@@ -335,14 +342,15 @@ extern NSString *const kCAFilterDestOut;
 			[self.percentageLabel sizeToFit];
 			if ([UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft) { // Support RTL languages
 				self.percentageLabel.transform = CGAffineTransformMakeScale(-1.0, 1.0);
-			}
+			}		
 		}
+
 		- (CGFloat)_outsideCornerRadiusForTraitCollection:(id)arg0 {
 			
 			if (!self.isForStatusBar)
 				return %orig;
 
-			return ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? 4.0 : 3.5; // Slightly adjust corner radius for expanded height
+			return 4.0; // Slightly adjust corner radius for expanded height
 		}
 
 		- (CGFloat)bodyColorAlpha {
@@ -356,15 +364,15 @@ extern NSString *const kCAFilterDestOut;
 				bodyLayer.fillColor = [[UIColor labelColor] colorWithAlphaComponent:0.4].CGColor; // Fill exisiting battery view completely
 
 			return bodyLayer;
-		}
+		}	
 
 		- (CALayer *)fillLayer {
 			CALayer *fill = %orig;
 
 			if (self.isForStatusBar)
 			{
-				fill.maskedCorners = (self.chargePercent > 0.9) ? (kCALayerMaxXMaxYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMinXMinYCorner) : (kCALayerMinXMaxYCorner | kCALayerMinXMinYCorner); // Rounded corners always on leading edge, flat on trailing until above 92% to match stock radius
-				fill.bounds = CGRectMake(fill.bounds.origin.x, fill.bounds.origin.y, fill.bounds.size.width, self.bounds.size.height);
+				fill.maskedCorners = (self.chargePercent > 0.80) ? (kCALayerMaxXMaxYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMinXMinYCorner) : (kCALayerMinXMaxYCorner | kCALayerMinXMinYCorner); // Rounded corners always on leading edge, flat on trailing until above 85% to match stock radius
+				fill.bounds = CGRectMake(fill.bounds.origin.x, fill.bounds.origin.y - 0.6, fill.bounds.size.width, self.bounds.size.height+1.2);
 			}
 
 			return fill;
@@ -373,7 +381,7 @@ extern NSString *const kCAFilterDestOut;
 		- (CGRect)_bodyRectForTraitCollection:(id)arg0 {
 			CGRect bodyRect = %orig;
 			// Resize view height to better replicate iOS 16
-			return self.isForStatusBar ? CGRectMake(bodyRect.origin.x, bodyRect.origin.y, bodyRect.size.width - 1, bodyRect.size.height) : bodyRect;	
+			return self.isForStatusBar ? CGRectMake(bodyRect.origin.x, bodyRect.origin.y - 0.6, bodyRect.size.width - 1, bodyRect.size.height + 1.2) : bodyRect;	
 		}
 
 		- (CGFloat)_lineWidthAndInterspaceForTraitCollection:(id)arg0 {
@@ -383,6 +391,11 @@ extern NSString *const kCAFilterDestOut;
 		- (BOOL)_shouldShowBolt {
 			return self.isForStatusBar ? NO : %orig; // Disable interior bolt when charging
 		}
+
+		-(BOOL)showsInlineChargingIndicator
+		{
+			return self.isForStatusBar ? NO : %orig;
+		}		
 
 		- (BOOL)_currentlyShowsPercentage {
 			return self.isForStatusBar ? YES : %orig;  // Always display battery percentage label

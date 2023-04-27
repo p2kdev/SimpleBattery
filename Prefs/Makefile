@@ -1,4 +1,3 @@
-export THEOS_PACKAGE_SCHEME=rootless
 export TARGET = iphone:clang:13.7:13.0
 
 include $(THEOS)/makefiles/common.mk
