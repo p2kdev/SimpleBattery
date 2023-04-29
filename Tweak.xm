@@ -162,7 +162,7 @@ extern NSString *const kCAFilterDestOut;
 			%orig;
 			if (self.isForStatusBar && style > 1)
 			{
-				UIColor *newBodyColor = self.backupTextColor;
+				UIColor *newBodyColor = [UIColor labelColor];
 
 				if ([self saverModeActive])
 					newBodyColor = [UIColor colorWithRed:1.0 green:0.839 blue:0.039 alpha:1];
@@ -306,7 +306,7 @@ extern NSString *const kCAFilterDestOut;
 				fillColor = [UIColor systemYellowColor];
 			}
 
-			if (self.chargePercent > 0.97)
+			if (self.chargePercent > 0.96)
 				[self setPinColor:fillColor];
 			else
 				[self setPinColor:[[UIColor labelColor] colorWithAlphaComponent:0.4]];
@@ -321,20 +321,13 @@ extern NSString *const kCAFilterDestOut;
 				[self _updatePercentage];
 		}
 
-		- (void)_updateFillLayer {
-			%orig;
-
-			if (self.isForStatusBar)
-				[self.fillLayer setCornerRadius:4.0]; // Set fill corner radius whenever layer updates
-		}
-
 		- (void)_updatePercentage {
 			%orig;
 
 			if (!self.isForStatusBar)
 				return;
 
-			self.percentageLabel.font = [UIFont systemFontOfSize:stockLabelFontSize weight:UIFontWeightHeavy]; // Set custom percentage font size
+			self.percentageLabel.font = [UIFont systemFontOfSize:(self.chargePercent == 1.0 && stockLabelFontSize > 10) ? 10 : stockLabelFontSize weight:UIFontWeightHeavy]; // Set custom percentage font size
 			self.percentageLabel.layer.allowsGroupBlending = YES;
 			self.percentageLabel.layer.allowsGroupOpacity = YES;
 			self.percentageLabel.layer.compositingFilter = ((self.chargingState != 1) && !self.saverModeActive) ? kCAFilterDestOut : nil; // Enable cutout effect on text when in transparent mode or default (when not charging)
@@ -342,15 +335,7 @@ extern NSString *const kCAFilterDestOut;
 			[self.percentageLabel sizeToFit];
 			if ([UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft) { // Support RTL languages
 				self.percentageLabel.transform = CGAffineTransformMakeScale(-1.0, 1.0);
-			}		
-		}
-
-		- (CGFloat)_outsideCornerRadiusForTraitCollection:(id)arg0 {
-			
-			if (!self.isForStatusBar)
-				return %orig;
-
-			return 4.0; // Slightly adjust corner radius for expanded height
+			}			
 		}
 
 		- (CGFloat)bodyColorAlpha {
@@ -366,22 +351,56 @@ extern NSString *const kCAFilterDestOut;
 			return bodyLayer;
 		}	
 
+		+ (id)_pinBezierPathForSize:(struct CGSize )arg0 complex:(BOOL)arg1 {
+			UIBezierPath *path = %orig;
+			[path applyTransform:CGAffineTransformMakeTranslation(0.8, 0)]; // Shift pin 1 px, done because setting line interspace width to fill body adds border
+			return path;
+		}
+
+
+		// -(void)setChargePercent:(double)arg1
+		// {
+		// 	arg1 = 0.90;
+		// 	%orig;
+		// }	
+
+		- (void)_updateFillLayer {
+			%orig;
+
+			if (self.isForStatusBar)
+				[self.fillLayer setCornerRadius:3.50]; // Set fill corner radius whenever layer updates
+		}	
+
+		// -(double)_insideCornerRadiusForTraitCollection:(id)arg1 {
+		// 	if (!self.isForStatusBar)
+		// 		return %orig;
+
+		// 	return 3.0; // Slightly adjust corner radius for expanded height			
+		// }			
+
+		- (CGFloat)_outsideCornerRadiusForTraitCollection:(id)arg0 {			
+			if (!self.isForStatusBar)
+				return %orig;
+
+			return 3.50; // Slightly adjust corner radius for expanded height
+		}					
+
 		- (CALayer *)fillLayer {
 			CALayer *fill = %orig;
 
 			if (self.isForStatusBar)
 			{
-				fill.maskedCorners = (self.chargePercent > 0.80) ? (kCALayerMaxXMaxYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMinXMinYCorner) : (kCALayerMinXMaxYCorner | kCALayerMinXMinYCorner); // Rounded corners always on leading edge, flat on trailing until above 85% to match stock radius
-				fill.bounds = CGRectMake(fill.bounds.origin.x, fill.bounds.origin.y - 0.6, fill.bounds.size.width, self.bounds.size.height+1.2);
+				fill.maskedCorners = (self.chargePercent > 0.88) ? (kCALayerMaxXMaxYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMinXMinYCorner) : (kCALayerMinXMaxYCorner | kCALayerMinXMinYCorner); // Rounded corners always on leading edge, flat on trailing until above 85% to match stock radius
+				fill.bounds = CGRectMake(fill.bounds.origin.x, fill.bounds.origin.y - 0.6, fill.bounds.size.width , self.bounds.size.height+1.2);
 			}
 
-			return fill;
+		 	return fill;
 		}
 
 		- (CGRect)_bodyRectForTraitCollection:(id)arg0 {
 			CGRect bodyRect = %orig;
 			// Resize view height to better replicate iOS 16
-			return self.isForStatusBar ? CGRectMake(bodyRect.origin.x, bodyRect.origin.y - 0.6, bodyRect.size.width - 1, bodyRect.size.height + 1.2) : bodyRect;	
+			return self.isForStatusBar ? CGRectMake(bodyRect.origin.x, bodyRect.origin.y - 0.6, bodyRect.size.width , bodyRect.size.height + 1.2) : bodyRect;	
 		}
 
 		- (CGFloat)_lineWidthAndInterspaceForTraitCollection:(id)arg0 {
